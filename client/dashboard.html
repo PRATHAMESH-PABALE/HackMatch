@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>  
+<body>
+    <header>
+        <button id="logoutBtn" class="logout-btn">Logout</button>
+        <h1>Welcome, <span id="welcomeMessage"></span></h1>
+    </header>
+
+    <section class="card-container">
+        <div class="card">
+            <img src="hackathonpreview.png" alt="Find Your Teammates">
+            <h2>Find Your Teammates</h2>
+            <p>Connect with like-minded individuals and build a strong hackathon team.</p>
+            <button onclick="window.location.href='findteammates.html'">Explore</button>
+        </div>
+
+        <div class="card">
+            <img src="hackathonpreview.png" alt="Connections & Groups">
+            <h2>Connections & Groups</h2>
+            <p>Join interest-based groups and expand your network in the hackathon community.</p>
+            <button onclick="window.location.href='connections.html'">View</button>
+        </div>
+
+        <div class="card">
+            <img src="hackathonpreview.png" alt="Register Yourself">
+            <h2>Register Yourself</h2>
+            <p>Sign up for upcoming hackathons and showcase your skills.</p>
+            <button onclick="window.location.href='register.html'">Join</button>
+        </div>
+    </section>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>

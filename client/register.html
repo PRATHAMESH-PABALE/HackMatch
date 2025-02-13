@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HackMatch - Registration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            text-align: center;
+        }
+        #register {
+            background: white;
+            width: 90%;
+            max-width: 500px;
+            margin: 30px auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        form input, form textarea {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        button {
+            width: 30%;
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            transition: background 0.3s;
+        }
+        #joinBtn { background: #28a745; color: white; }
+        #editBtn { background: #ffc107; color: black; }
+        #saveBtn { background: #17a2b8; color: white; display: none; }
+        #deleteBtn { background: #dc3545; color: white; }
+        .profile-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            margin: 20px auto;
+            text-align: left;
+        }
+        .connect-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>HackMatch - Registration</h1>
+    </header>
+
+    <section id="register">
+        <h2>Create an Account</h2>
+        <form id="registerForm">
+            <input type="text" id="name" placeholder="Full Name" required>
+            <input type="text" id="college" placeholder="College Name" required>
+            <input type="email" id="email" placeholder="Email ID" required>
+            <input type="text" id="skills" placeholder="Skills" required>
+            <input type="url" id="linkedin" placeholder="LinkedIn Profile" required>
+            <input type="url" id="github" placeholder="GitHub Profile" required>
+            <textarea id="projects" placeholder="Describe Your Projects" rows="4" required></textarea>
+            
+            <button type="submit" id="joinBtn">Join</button>
+            <button type="button" id="editBtn" disabled>Edit</button>
+            <button type="button" id="saveBtn">Save Changes</button>
+            <button type="button" id="deleteBtn" disabled>Delete</button>
+        </form>
+        
+        <p>Already registered? View profiles below.</p>
+    </section>
+
+    <h2>Your Profile</h2>
+    <div id="profileList"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const registerForm = document.getElementById("registerForm");
+            const joinBtn = document.getElementById("joinBtn");
+            const editBtn = document.getElementById("editBtn");
+            const saveBtn = document.getElementById("saveBtn");
+            const deleteBtn = document.getElementById("deleteBtn");
+            const profileList = document.getElementById("profileList");
+
+            let userData = JSON.parse(localStorage.getItem("userData"));
+
+            if (userData) {
+                fillForm(userData);
+                disableJoin();
+                renderProfile();
+            }
+
+            registerForm.addEventListener("submit", function (event) {
+                event.preventDefault();
+
+                if (!validateForm()) {
+                    alert("Please fill in all the fields.");
+                    return;
+                }
+
+                userData = getFormData();
+                localStorage.setItem("userData", JSON.stringify(userData));
+                disableJoin();
+                renderProfile();
+                alert("Registration successful!");
+            });
+
+            editBtn.addEventListener("click", function () {
+                enableForm();
+                saveBtn.style.display = "inline-block";
+            });
+
+            saveBtn.addEventListener("click", function () {
+                if (!validateForm()) {
+                    alert("Please fill in all the fields.");
+                    return;
+                }
+                userData = getFormData();
+                localStorage.setItem("userData", JSON.stringify(userData));
+                disableJoin();
+                renderProfile();
+                alert("Changes saved successfully!");
+            });
+
+            deleteBtn.addEventListener("click", function () {
+                localStorage.removeItem("userData");
+                enableJoin();
+                profileList.innerHTML = "<p>No profiles available.</p>";
+                alert("Registration deleted.");
+            });
+
+            function disableJoin() {
+                joinBtn.disabled = true;
+                editBtn.disabled = false;
+                deleteBtn.disabled = false;
+                saveBtn.style.display = "none";
+                registerForm.querySelectorAll("input, textarea").forEach(input => input.disabled = true);
+            }
+
+            function enableJoin() {
+                joinBtn.disabled = false;
+                editBtn.disabled = true;
+                deleteBtn.disabled = true;
+                saveBtn.style.display = "none";
+                registerForm.querySelectorAll("input, textarea").forEach(input => input.disabled = false);
+                registerForm.reset();
+            }
+
+            function enableForm() {
+                registerForm.querySelectorAll("input, textarea").forEach(input => input.disabled = false);
+                joinBtn.disabled = true;
+            }
+
+            function fillForm(data) {
+                document.getElementById("name").value = data.name;
+                document.getElementById("college").value = data.college;
+                document.getElementById("email").value = data.email;
+                document.getElementById("skills").value = data.skills;
+                document.getElementById("linkedin").value = data.linkedin;
+                document.getElementById("github").value = data.github;
+                document.getElementById("projects").value = data.projects;
+            
+            }
+
+            function getFormData() {
+                return {
+                    name: document.getElementById("name").value,
+                    college: document.getElementById("college").value,
+                    email: document.getElementById("email").value,
+                    skills: document.getElementById("skills").value,
+                    linkedin: document.getElementById("linkedin").value,
+                    github: document.getElementById("github").value,
+                    projects: document.getElementById("projects").value
+                };
+            }
+
+            function validateForm() {
+                return [...registerForm.querySelectorAll("input, textarea")].every(input => input.value.trim() !== "");
+            }
+
+            function renderProfile() {
+                if (userData) {
+                    profileList.innerHTML = `
+                        <div class="profile-card">
+                            <h2>${userData.name}</h2>
+                            <p><strong>College:</strong> ${userData.college}</p>
+                            <p><strong>Email:</strong> ${userData.email}</p>
+                            <p><strong>skills:</strong> ${userData.skills}</p>
+                            <a href="${userData.linkedin}" target="_blank">LinkedIn</a> |
+                            <a href="${userData.github}" target="_blank">GitHub</a>
+                            <br><br>
+                            <button class="connect-btn">Connect</button>
+                        </div>
+                    `;
+                } else {
+                    profileList.innerHTML = "<p>No profiles available.</p>";
+                }
+            }
+        });
+    </script>
+</body>
+</html>

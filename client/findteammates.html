@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Your Teammates</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f9;
+        }
+        .profile-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            margin: 20px auto;
+            text-align: left;
+        }
+        .connect-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Find Your Teammates</h1>
+    <div id="profileList"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const profileList = document.getElementById("profileList");
+            const userData = JSON.parse(localStorage.getItem("userData"));
+
+            if (userData) {
+                const profileHTML = `
+                    <div class="profile-card">
+                        <h2>${userData.name}</h2>
+                        <p><strong>College:</strong> ${userData.college}</p>
+                        <p><strong>Email:</strong> ${userData.email}</p>
+                        <p><strong>skills:</strong> ${userData.skills}</p>
+                        <p><strong>Projects:</strong> ${userData.projects}</p>
+                        <a href="${userData.linkedin}" target="_blank">LinkedIn</a> |
+                        <a href="${userData.github}" target="_blank">GitHub</a>
+                        <br><br>
+                        <button class="connect-btn">Connect</button>
+                    </div>
+                `;
+                profileList.innerHTML = profileHTML;
+            } else {
+                profileList.innerHTML = "<p>No profiles available.</p>";
+            }
+        });
+    </script>
+</body>
+</html>
